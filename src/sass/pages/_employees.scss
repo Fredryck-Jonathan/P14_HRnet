@@ -1,0 +1,178 @@
+.Employees{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    #first-section{
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+
+        .number-entries-div{
+
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+        }
+
+        .search-div{
+
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+        }
+
+    }
+
+    #second-section{
+
+        width: 80%;
+
+        .table-row{
+
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            place-content: center center;
+            gap: 20px;
+
+        
+            .table-cell-infos{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 5px 0px 5px 0px;
+
+                &:hover{
+                    background-color: rgb(196, 196, 196);
+                }
+            }
+
+            .filter-div{
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                padding: 5px 2px 5px 2px;
+                flex-direction: row;
+                text-align: center;
+                cursor: pointer;
+
+                &.up{
+                    .filter-div-icon-element{
+                        :nth-child(1){
+                            color: black;
+                        }
+                        :nth-child(2){
+                            visibility: hidden;
+                        }
+                    }
+                }
+        
+                &.down{
+                    .filter-div-icon-element{
+                        :nth-child(2){
+                            color: black;
+                        }
+                        :nth-child(1){
+                            visibility: hidden;
+                        }
+                    }
+                }
+
+                &:hover{
+
+                    background-color: rgb(236, 236, 236);
+
+                }
+
+
+
+                .filter-text{
+
+                    font-size: 17px;
+                    font-weight: bold;
+                    text-align: center;
+                    margin: 0;
+
+                }
+
+                .filter-div-icon-element{
+
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+
+
+                    :nth-child(1), :nth-child(2){
+
+                        color: darkgrey;
+                        margin: 0;
+
+                    }
+
+                }
+
+            }
+        }
+
+        .database-element{
+
+            border-bottom: 1px solid black;
+            border-top: 1px solid black;
+
+        }
+
+    }
+
+
+    #third-section{
+
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .first-part-4s{
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+
+            #previous-next-div{
+
+                display: flex;
+                gap: 10px;
+
+                .previous-next-button{
+
+                    background: none;
+                    border: none;
+                    font-size: 15px;
+                    font-weight: bold;
+                    cursor: pointer;
+
+                    &:not(:disabled):hover{
+
+                        color: rgb(88, 88, 88);
+
+                    }
+
+                }
+
+
+            }
+
+        }
+
+    }
+
+}
