@@ -1,10 +1,292 @@
-.calender {
+body {
+  margin: 0;
+  height: 100%;
+}
+
+#root {
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 100vh;
+}
+#root::before {
+  content: "";
+  background: linear-gradient(to right, #6dc4f8 50%, #c692f3 50%);
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100px;
-  height: 100px;
-  background-color: rgb(60, 104, 172);
+  z-index: -2;
+}
+#root::after {
+  content: "";
+  background: linear-gradient(to bottom right, #0592f6, #b388ef);
+  border-radius: 40% 0px 40% 0px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.calender {
+  position: relative;
+}
+.calender .calender-input-div {
+  display: flex;
+  z-index: 10;
+}
+.calender .calender-input-div input {
+  font-size: 16px;
+  padding-left: 5px;
+  color: #004fad;
+}
+.calender .calender-input-div button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 5px 5px 5px;
+  font-size: 16px;
+  color: #004fad;
+}
+.calender .calender-modal {
+  position: absolute;
+  top: 30px;
+  left: -40px;
+  width: 300px;
+  height: 300px;
+  background-color: #004fad;
+  border-radius: 40px 0px 40px 0px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transform: scale(0%);
+  transition: all 0.3s;
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+  /*&::before, &::after{
+
+      content: '';
+      position: absolute;
+      background-color: #333;
+      transition: all 0.5s ease-in-out;
+
+
+
+  }
+
+
+  &::before{
+
+      top: 0;
+      left: 0;
+      height: 5px;
+      width: 0%;
+      border-radius: 40px 40px 0 0;
+
+  }
+
+  &::after{
+
+      bottom: 0;
+      left: 0;
+      height: 5px;
+      width: 0%;
+      border-radius: 0 0 40px 40px;
+
+  }*/
+}
+.calender .calender-modal.active {
+  transform: scale(100%);
+  z-index: 1500;
+}
+.calender .calender-modal.active::before, .calender .calender-modal.active::after {
+  width: 100%;
+}
+.calender .calender-modal .calender-first-part {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.calender .calender-modal .calender-first-part .dropdown-calender {
+  display: flex;
+  border-radius: 5px;
+  flex-direction: column;
+  width: 140px;
+  transition: all 0.3s ease-in;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+.calender .calender-modal .calender-first-part .dropdown-calender.active {
+  width: 280px;
+  background-color: rgb(241, 241, 241);
+}
+.calender .calender-modal .calender-first-part .dropdown-calender.active .dropdown-content {
+  max-height: 250px;
+  overflow-y: scroll;
+}
+.calender .calender-modal .calender-first-part .dropdown-calender.active .dropdown-content .year-option {
+  display: flex;
+  overflow-y: visible;
+}
+.calender .calender-modal .calender-first-part .dropdown-calender.active .dropdown-content .year-option.active .all-month-option {
+  height: 70px;
+}
+.calender .calender-modal .calender-first-part .dropdown-calender.active .dropdown-content .year-option.active .all-month-option .month-option {
+  display: inline;
+}
+.calender .calender-modal .calender-first-part .dropdown-calender .button-toggle-dropdown {
+  color: #004fad;
+  width: 100%;
+  border-radius: 5px;
+  height: 30px;
+  font-size: 16px;
+  z-index: 2;
+  text-align: left;
+  cursor: pointer;
+  border: none;
+  margin-top: 10px;
+  background-color: rgb(241, 241, 241);
+}
+.calender .calender-modal .calender-first-part .dropdown-calender .button-toggle-dropdown:hover {
+  background-color: rgb(179, 179, 179);
+}
+.calender .calender-modal .calender-first-part .dropdown-calender .dropdown-content {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  max-height: 0px;
+  transition: all 0.1s;
+  width: 100%;
+}
+.calender .calender-modal .calender-first-part .dropdown-calender .dropdown-content .year-option {
+  width: 100%;
+  height: auto;
+  z-index: 100;
+  flex-direction: column;
+  overflow-y: hidden;
+  align-items: flex-start;
+  justify-content: center;
+}
+.calender .calender-modal .calender-first-part .dropdown-calender .dropdown-content .year-option .button-toggle-year-dropdown {
+  height: auto;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  border: none;
+  color: #004fad;
+  background-color: rgb(241, 241, 241);
+}
+.calender .calender-modal .calender-first-part .dropdown-calender .dropdown-content .year-option .button-toggle-year-dropdown:hover {
+  background-color: rgb(179, 179, 179);
+}
+.calender .calender-modal .calender-first-part .dropdown-calender .dropdown-content .year-option .all-month-option {
+  height: 0px;
+  display: grid;
+  overflow-y: hidden;
+  grid-template-columns: 1fr 1fr 1fr;
+  transition: all 0.3s ease-in;
+  color: #004fad;
+}
+.calender .calender-modal .calender-first-part .dropdown-calender .dropdown-content .year-option .all-month-option .month-option {
+  color: #004fad;
+  cursor: pointer;
+  border: none;
+  background-color: rgb(241, 241, 241);
+  transition: all 0.3s ease;
+}
+.calender .calender-modal .calender-first-part .dropdown-calender .dropdown-content .year-option .all-month-option .month-option:hover {
+  background-color: rgb(179, 179, 179);
+}
+.calender .calender-modal .calender-first-part .div-button-calender-first-part {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  width: 100%;
+  height: 50px;
+  margin-right: 10px;
+  gap: 10px;
+}
+.calender .calender-modal .calender-first-part .div-button-calender-first-part .change-month {
+  width: 60px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.calender .calender-modal .calender-first-part .div-button-calender-first-part .change-month button {
+  border-radius: 5px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 5px 5px 5px;
+  font-size: 16px;
+  color: #004fad;
+  cursor: pointer;
+}
+.calender .calender-modal .calender-first-part .div-button-calender-first-part .change-month button:hover {
+  background-color: grey;
+}
+.calender .calender-modal .calender-first-part .div-button-calender-first-part .close_calender_dropdown {
+  font-size: 16px;
+  color: #004fad;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 5px 5px 5px;
+  border: none;
+  cursor: pointer;
+}
+.calender .calender-modal .calender-first-part .div-button-calender-first-part .close_calender_dropdown:hover {
+  background-color: grey;
+}
+.calender .calender-modal .calender-second-part {
+  margin-top: 5px;
+  padding: 0px 5px 0px 5px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  gap: 5px;
+}
+.calender .calender-modal .calender-second-part div {
+  font-size: 16px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: white;
+}
+.calender .calender-modal .calender-second-part button {
+  cursor: pointer;
+  color: #004fad;
+  border: none;
+}
+.calender .calender-modal .calender-second-part button:hover {
+  background-color: grey;
+}
+.calender .calender-modal .calender-third-part {
+  display: flex;
+  justify-content: right;
+  margin-right: 10px;
+  align-items: center;
+  height: 75px;
+}
+.calender .calender-modal .calender-third-part button {
+  border-radius: 5px;
+  border: none;
+  padding: 7px 7px 7px 7px;
+  color: #004fad;
+  font-weight: bold;
+  cursor: pointer;
+}
+.calender .calender-modal .calender-third-part button:hover {
+  background-color: grey;
 }
 
 .home {
@@ -12,18 +294,49 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 10px;
+  width: 100%;
 }
-.home #form-create-employee {
+.home #logo-hrnet {
+  width: 110px;
+  background-color: white;
+  border-radius: 30px 0px 30px 0px;
+}
+.home #link-to-employees {
+  padding: 17px;
+  background-color: white;
+  color: #3990f1;
+  text-decoration: none;
+  transition: all 0.3s;
+  font-weight: bold;
+}
+.home #link-to-employees:hover {
+  color: white;
+  background-color: #642C86;
+  border-radius: 25px 0px 25px 0px;
+}
+.home .div-home-content {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  background-color: white;
+  border-radius: 40px 0px 40px 0px;
+  width: 30%;
+  padding: 10px;
+  color: #004fad;
 }
-.home #form-create-employee .input-wrapper {
+.home .div-home-content #form-create-employee {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: white;
+}
+.home .div-home-content #form-create-employee .input-wrapper {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
-.home #form-create-employee .address-part {
+.home .div-home-content #form-create-employee .address-part {
   display: flex;
   flex-direction: column;
   position: relative;
@@ -31,12 +344,40 @@
   padding: 20px 25px 25px 25px;
   gap: 20px;
 }
+.home .div-home-content #form-create-employee #button-submit {
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: bold;
+  color: #004fad;
+  background-color: white;
+  border: 2px solid #004fad;
+}
+.home .div-home-content #form-create-employee #button-submit:hover {
+  border-radius: 25px 0px 25px 0px;
+  background-color: #004fad;
+  color: white;
+}
+.home .div-home-content #form-create-employee #button-submit:disabled {
+  cursor: auto;
+  border-radius: 0px;
+  color: grey;
+  border: 2px solid grey;
+  background-color: #eeeeee;
+}
 
 .Employees {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-color: white;
+  padding: 50px 20px 50px 20px;
+  border-radius: 40px 0px 40px 0px;
+  width: 80%;
+}
+.Employees h1 {
+  margin-top: 0;
 }
 .Employees #first-section {
   display: flex;
@@ -142,4 +483,54 @@
 }
 .Employees #third-section .first-part-4s #previous-next-div .previous-next-button:not(:disabled):hover {
   color: rgb(88, 88, 88);
+}
+.Employees #third-section #link-to-home {
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  color: #004fad;
+  border: 2px solid #004fad;
+  padding: 5px 15px 5px 15px;
+  transition: all 0.3s;
+}
+.Employees #third-section #link-to-home:hover {
+  color: white;
+  background-color: #004fad;
+  border-radius: 10px 0px 10px 0px;
+}
+
+.Error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  background-color: white;
+  padding: 50px;
+  border-radius: 40px 0px 40px 0px;
+}
+.Error h3 {
+  margin: 0;
+  font-size: 35px;
+  color: rgb(74, 62, 134);
+}
+.Error p {
+  margin: 0;
+  font-size: 20px;
+  color: #0040a6;
+}
+.Error a {
+  margin: 0;
+  font-size: 20px;
+  border: 2px solid #0040a6;
+  color: #0040a6;
+  text-decoration: none;
+  padding: 15px;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+.Error a:hover {
+  border-radius: 40px 0px 40px 0px;
+  background-color: #0040a6;
+  color: white;
 }/*# sourceMappingURL=main.css.map */

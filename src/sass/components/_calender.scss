@@ -1,11 +1,363 @@
 .calender{
 
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100px;
-    height: 100px;
-    background-color: rgb(60, 104, 172);
+    position: relative;
+
+
+    .calender-input-div{
+
+        display: flex;
+        z-index: 10;
+
+        input{
+
+            font-size: 16px;
+            padding-left: 5px;
+            color: #004FADFF;
+
+        }
+
+        button{
+
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px 5px 5px 5px;
+            font-size: 16px;
+            color: #004FADFF;
+
+        }
+
+    }
+
+
+    .calender-modal{
+
+        position: absolute;
+        top: 30px;
+        left: -40px;
+        width: 300px;
+        height: 300px;
+        //background: linear-gradient(to bottom right, #4C99F4FF, #9C68C2FF);
+        background-color: #004FADFF;
+        border-radius: 40px 0px 40px 0px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transform: scale(0%);
+        transition: all 0.3s;
+        border-top: 2px solid transparent;
+        border-bottom: 2px solid transparent;
+
+        /*&::before, &::after{
+
+            content: '';
+            position: absolute;
+            background-color: #333;
+            transition: all 0.5s ease-in-out;
+
+
+
+        }
+
+
+        &::before{
+
+            top: 0;
+            left: 0;
+            height: 5px;
+            width: 0%;
+            border-radius: 40px 40px 0 0;
+
+        }
+
+        &::after{
+            
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            width: 0%;
+            border-radius: 0 0 40px 40px;
+
+        }*/
+
+        &.active{
+
+            transform: scale(100%);
+            z-index: 1500;
+
+            &::before, &::after{
+
+                width: 100%;
+    
+    
+    
+            }
+
+        }
+    
+        .calender-first-part{
+    
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+    
+            .dropdown-calender{
+                display: flex;
+                border-radius: 5px;
+                flex-direction: column;
+                width: 140px;
+                transition: all 0.3s ease-in;
+                
+                position: absolute;
+                top: 10px;
+                left: 10px;
+    
+                &.active{
+                    width: 280px;
+                    background-color: rgb(241, 241, 241);
+    
+                    .dropdown-content{
+                        max-height: 250px;
+                        overflow-y: scroll;
+    
+                        .year-option{
+                            display: flex;
+                            overflow-y: visible;
+    
+                            &.active{
+                                .all-month-option{
+                                    height: 70px;
+                                    .month-option{
+                                        display: inline;
+                                    }
+                                }
+                            }
+    
+                        }
+                    }
+    
+                }
+    
+                .button-toggle-dropdown{
+    
+                    color: #004FADFF;
+                    width: 100%;
+                    border-radius: 5px;
+                    height: 30px;
+                    font-size: 16px;
+                    z-index: 2;
+                    text-align: left;
+                    cursor: pointer;
+                    border: none;
+                    margin-top: 10px;
+                    background-color: rgb(241, 241, 241);
+                    &:hover{
+    
+                        background-color: rgb(179, 179, 179);
+    
+                    }
+    
+                }
+    
+                .dropdown-content{
+    
+                    display: flex;
+                    flex-direction: column;
+                    overflow-y: scroll;
+                    max-height: 0px;
+    
+                    transition: all 0.1s;
+                    width: 100%;
+    
+                    .year-option{
+                        width: 100%;
+                        height: auto;
+                        z-index: 100;
+                        flex-direction: column;
+                        overflow-y: hidden;
+                        align-items: flex-start;
+                        justify-content: center;
+    
+                        .button-toggle-year-dropdown{
+    
+                            height: auto;
+                            width: 100%;
+                            text-align: left;
+                            cursor: pointer;
+                            border: none;
+                            color: #004FADFF;
+                            background-color: rgb(241, 241, 241);
+                            &:hover{
+                                background-color: rgb(179, 179, 179);
+                            }
+                        }
+    
+                        .all-month-option{
+        
+                            height: 0px;
+                            display: grid;
+                            overflow-y: hidden;
+                            grid-template-columns: 1fr 1fr 1fr;
+                            transition: all 0.3s ease-in;
+                            color: #004FADFF;
+    
+                            .month-option{
+    
+                                color: #004FADFF;
+                                cursor: pointer;
+                                border: none;
+                                background-color: rgb(241, 241, 241);
+                                transition: all 0.3s ease;
+                                &:hover{
+    
+                                    background-color: rgb(179, 179, 179);
+    
+                                }
+    
+    
+                            }
+    
+                        }
+                    }
+                    
+    
+    
+                }
+    
+            }
+
+            .div-button-calender-first-part{
+
+                display: flex;
+                align-items: center;
+                justify-content: right;
+                width: 100%;
+                height: 50px;
+                margin-right: 10px;
+                gap: 10px;
+
+                .change-month{
+    
+                    width: 60px;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+
+                    button{
+
+                        border-radius: 5px;
+                        border: none;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 5px 5px 5px 5px;
+                        font-size: 16px;
+                        color: #004FADFF;
+                        cursor: pointer;
+
+                        &:hover{
+
+                            background-color: grey;
+
+                        }
+
+                    }
+        
+                }
+
+                .close_calender_dropdown{
+
+                    font-size: 16px;
+                    color: #004FADFF;
+
+                    border-radius: 5px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 5px 5px 5px 5px;
+                    border: none;
+                    cursor: pointer;
+
+                    &:hover{
+
+                        background-color: grey;
+
+                    }
+
+
+                }
+
+
+            }
+    
+        }
+    
+        .calender-second-part{
+            margin-top: 5px;
+            padding: 0px 5px 0px 5px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            gap: 5px;
+
+            div{
+
+                font-size: 16px;
+                margin-bottom: 10px;
+                font-weight: bold;
+                color: white;
+
+            }
+
+            button{
+
+                cursor: pointer;
+                color: #004FADFF;
+                border: none;
+
+                &:hover{
+
+                    background-color: grey;
+
+                }
+
+
+            }
+    
+        }
+    
+    
+        .calender-third-part{
+    
+            display: flex;
+            justify-content: right;
+            margin-right: 10px;
+            align-items: center;
+            height: 75px;
+
+            button{
+
+                border-radius: 5px;
+                border: none;
+                padding: 7px 7px 7px 7px;
+                color: #004FADFF;
+                font-weight: bold;
+
+                cursor: pointer;
+
+                &:hover{
+
+                    background-color: grey;
+
+                }
+
+            }
+    
+        }
+    
+    }
 
 
 

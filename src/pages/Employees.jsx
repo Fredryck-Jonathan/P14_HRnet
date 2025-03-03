@@ -1,18 +1,37 @@
 import { Link } from "react-router-dom"
-import employeeDataFree from "../data/employee_data"
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+
 
 function Employees() {
 
-    const [employeeData, setEmployeeData] = useState(employeeDataFree)
-    const [employeeDataToShow, setEmployeeDataToShow] = useState(employeeData)
+    const allEmployees = useSelector((state) => state.employeeReducer);
+    const getEmployees = async () => {
+        if (allEmployees) {
+            setEmployeeDataNoFilter(allEmployees.employee_infos);
+            setEmployeeData(allEmployees.employee_infos);
+        }
+    }
+
+    const [employeeDataNoFilter, setEmployeeDataNoFilter] = useState(undefined)
+    const [employeeData, setEmployeeData] = useState(undefined)
+    const [employeeDataToShow, setEmployeeDataToShow] = useState([])
     const [filterApplied, setFilterApplied] = useState(false)
     const [numberPage, setPage] = useState(1)
     const [infoEntries, setInfosEntries] = useState(false)
+    const [charged, setCharged] = useState(false)
+
+    useEffect(() => {
+        if (employeeData&& employeeDataToShow) {
+            setCharged(true)
+        } else {
+            setCharged(false)
+            getEmployees()
+        }
+    }, [employeeData, employeeDataToShow, allEmployees])
 
     useEffect(() => {
         if (!filterApplied) return;
-
         if (document.querySelector('.up')) {
             const filterDiv = document.querySelector('.up');
             const data_filter = filterDiv.getAttribute('data-filter');
@@ -33,32 +52,27 @@ function Employees() {
 
     }, [employeeData, filterApplied])
 
+
     useEffect(() => {
         const previous_button = document.getElementById('previous-button');
-        console.log(numberPage, "page number tu coco")
         if (numberPage === 1) {
-            console.log(previous_button);
             previous_button.setAttribute("disabled", "");
         } else {
             previous_button.removeAttribute("disabled");
-            console.log(previous_button)
         }
     }, [numberPage])
+
 
     useEffect(() => {
         numberEntriesToShow()
     }, [document.getElementById('select-entries'), employeeData, numberPage])
 
 
-
+    // fonction qui gère l'événement onCLick sur un élément de filtre pour trier les employés.
     const filterClick = (e) => {
         e.preventDefault();
-
         const elementEvent = e.currentTarget;
-        console.log(elementEvent);
         const data_filter = elementEvent.getAttribute('data-filter');
-        console.log(data_filter)
-
         document.querySelectorAll('.filter-div').forEach(element => {
             if (element !== elementEvent) {
                 element.classList.forEach(className => {
@@ -68,7 +82,6 @@ function Employees() {
                 })
             }
         })
-
         if (elementEvent.classList.contains("up")) {
             elementEvent.classList.add("down");
             elementEvent.classList.remove('up');
@@ -94,14 +107,9 @@ function Employees() {
         }
     }
 
-
+    // Fonction qui trie les employés en fonction d'un critère et d'un ordre spécifiés.
     const filterFunction = (filter) => {
-        console.log(filter)
-
         if (filter.typeFilter === "up") {
-            console.log(employeeData)
-            const test = employeeData[0];
-            console.log(test[filter.nameFilter])
             const newEmployeeData = [...employeeData].sort((a, b) => {
                 if (typeof a[filter.nameFilter] !== "number") {
                     return a[filter.nameFilter].localeCompare(b[filter.nameFilter]);
@@ -113,29 +121,32 @@ function Employees() {
         } else if (filter.typeFilter === "down") {
 
     const newEmployeeData = [...employeeData].sort((a, b) => {
-                if (typeof a[filter.nameFilter] !== "number") {
+        if (typeof a[filter.nameFilter] !== "number") {
                     return b[filter.nameFilter].localeCompare(a[filter.nameFilter]);
-                } else {
+        } else {
                     return b[filter.nameFilter] - a[filter.nameFilter]
-                }
-            })
+            }
+        })
             setEmployeeData(newEmployeeData)
         } else {
-            setEmployeeData(employeeDataFree)
+            setEmployeeData(employeeDataNoFilter)
         }
         setFilterApplied(false)
     }
 
+
+
+    // Fonction qui gère la recherche dans les données des employés.
     const filterSearch = (e) => {
         e.preventDefault();
         setPage(1)
         const valueToSearch = e.currentTarget.value.toUpperCase();
         if (valueToSearch === "") {
-            setEmployeeData(employeeDataFree);
+            setEmployeeData(employeeDataNoFilter);
             setFilterApplied(true)
         } else {
             const newEmployeeData = [];
-            [...employeeDataFree].forEach(employee => {
+            [...employeeDataNoFilter].forEach(employee => {
                 if (filterDataBySearch(employee, valueToSearch)) {
                     newEmployeeData.push(employee)
                 }
@@ -145,6 +156,7 @@ function Employees() {
         }
     }
 
+    // Fonction qui filtre les données des employés en fonction d'une valeur de recherche.
     const filterDataBySearch = (employees, valueToSearch) => {
         return Object.values(employees).some(valueEmployee => {
             if (typeof valueEmployee !== "string") {
@@ -158,43 +170,41 @@ function Employees() {
         })
     }
 
+    // Fonction qui met à jour l'affichage des entrées en fonction du nombre sélectionné par l'utilisateur.
     const numberEntriesToShow = (e) => {
-        const numberOfEntries = Number(document.getElementById('select-entries').value);
-        const startIndex = Number((numberPage - 1) * numberOfEntries);
-        console.log(employeeData.length - 1, startIndex + numberOfEntries, startIndex);
-        const newEmployeeDataToShow = employeeData.slice(startIndex, startIndex + numberOfEntries);
-        if ((employeeData.length - 1) <= (numberPage * numberOfEntries)) {
-            const next_button = document.getElementById('next-button');
-            next_button.setAttribute("disabled", "");
+        if (!employeeData) {
+            return false
         } else {
-            const next_button = document.getElementById('next-button');
-            next_button.removeAttribute("disabled");
+            const numberOfEntries = Number(document.getElementById('select-entries').value);
+            const startIndex = Number((numberPage - 1) * numberOfEntries);
+            const newEmployeeDataToShow = employeeData.slice(startIndex, startIndex + numberOfEntries);
+            if ((employeeData.length) <= (numberPage * numberOfEntries)) {
+                const next_button = document.getElementById('next-button');
+                next_button.setAttribute("disabled", "");
+            } else {
+                const next_button = document.getElementById('next-button');
+                next_button.removeAttribute("disabled");
+            }
+            const newInfosEntries = {
+                from: startIndex+1 ,
+                to:startIndex + numberOfEntries
+            }
+            setInfosEntries(newInfosEntries)
+            setEmployeeDataToShow(newEmployeeDataToShow);
         }
-
-        const newInfosEntries = {
-            from: startIndex+1 ,
-            to:startIndex + numberOfEntries
-        }
-
-        setInfosEntries(newInfosEntries)
-
-        console.log(newEmployeeDataToShow)
-        setEmployeeDataToShow(newEmployeeDataToShow);
     }
 
+
+    // Fonction pour modifier le numéro de page en fonction de l'action fournie
     const modifyPageNumber = (action) => {
-        console.log(action)
         if (action === "+") {
             const newNumberOfPage = numberPage + 1;
-            console.log(newNumberOfPage)
             setPage(newNumberOfPage);
         } else {
             const newNumberOfPage = numberPage - 1;
-            console.log(newNumberOfPage)
             setPage(newNumberOfPage)
         }
     }
-
 
     return (
         <div className='Employees'>
@@ -202,7 +212,7 @@ function Employees() {
             <section id="first-section">
                 <div className="number-entries-div">
                     <p>Show</p>
-                    <select onChange={numberEntriesToShow} name="select-entries" id="select-entries" defaultValue={10}>
+                    <select onInput={(e) => { if (numberPage === 1) { numberEntriesToShow(e); } else { setPage(1) } }} name="select-entries" id="select-entries" defaultValue={10}>
                         <option value="2">2</option>
                         <option value="5">5</option>
                         <option value="10">10</option>
@@ -215,7 +225,6 @@ function Employees() {
                     <input onChange={filterSearch} id="input-search" type="search" />
                 </div>
             </section>
-
             <div id="second-section">
                     <div className="table-row">
                         <div className="filter-div" data-filter="firstName" onClick={filterClick}>
@@ -246,7 +255,6 @@ function Employees() {
                                     <ion-icon className='down-arrow' name="caret-down-outline"></ion-icon>
                                 </div>
                         </div>
-
                         <div className="filter-div" data-filter="dateOfBirth" onClick={filterClick}>
                             <p className="filter-text">Date of Birth</p>
                                 <div className="filter-div-icon-element">
@@ -254,7 +262,6 @@ function Employees() {
                                     <ion-icon className='down-arrow' name="caret-down-outline"></ion-icon>
                                 </div>
                         </div>
-
                         <div className="filter-div" data-filter="street" onClick={filterClick}>
                             <p className="filter-text">Street</p>
                                 <div className="filter-div-icon-element">
@@ -262,7 +269,6 @@ function Employees() {
                                     <ion-icon className='down-arrow' name="caret-down-outline"></ion-icon>
                                 </div>
                         </div>
-
                         <div className="filter-div" data-filter="city" onClick={filterClick}>
                             <p className="filter-text">City</p>
                                 <div className="filter-div-icon-element">
@@ -270,7 +276,6 @@ function Employees() {
                                     <ion-icon className='down-arrow' name="caret-down-outline"></ion-icon>
                                 </div>
                         </div>
-
                         <div className="filter-div" data-filter="state" onClick={filterClick}>
                             <p className="filter-text">State</p>
                                 <div className="filter-div-icon-element">
@@ -278,7 +283,6 @@ function Employees() {
                                     <ion-icon className='down-arrow'name="caret-down-outline"></ion-icon>
                                 </div>
                         </div>
-
                         <div className="filter-div" data-filter="zipCode" onClick={filterClick}>
                             <p className="filter-text">Zip Code</p>
                             <div className="filter-div-icon-element">
@@ -286,12 +290,9 @@ function Employees() {
                                 <ion-icon className='down-arrow' name="caret-down-outline"></ion-icon>
                             </div>
                         </div>
-
                     </div>
-
                 <div className="database-element">
-
-                    {employeeDataToShow.map((employee, index) => (
+                    {charged && employeeDataToShow.map((employee, index) => (
                         <div className="table-row" key={index}>
                             <div className="table-cell-infos">{ employee.firstName}</div>
                             <div className="table-cell-infos">{ employee.lastName}</div>
@@ -304,24 +305,21 @@ function Employees() {
                             <div className="table-cell-infos">{ employee.zipCode}</div>
                         </div>
                     ))}
-                    
+                    {employeeDataToShow.length <= 0 &&
+                        <p>No employees found matching the search.</p>
+                    }
                 </div>
             </div>
-
-
             <section id="third-section">
-
                 <div className="first-part-4s">
-                    <p>Showing {infoEntries.from} to {infoEntries.to} of {employeeData.length} entries</p>
+                    <p>Showing {infoEntries.from} to {infoEntries.to} of {employeeData && employeeData.length} entries</p>
                     <div id="previous-next-div">
                         <button id="previous-button" className="previous-next-button" onClick={() => modifyPageNumber("")}>Previous</button>
                         <button id="next-button"className="previous-next-button" onClick={() => modifyPageNumber("+")}>Next</button>
                     </div>
                 </div>
-                <Link to="/">Home</Link>
-
+                <Link id="link-to-home" to="/">Home</Link>
             </section>
-
         </div>
     )
 }
