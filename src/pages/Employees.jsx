@@ -119,21 +119,19 @@ function Employees() {
             })
             setEmployeeData(newEmployeeData)
         } else if (filter.typeFilter === "down") {
-
-    const newEmployeeData = [...employeeData].sort((a, b) => {
-        if (typeof a[filter.nameFilter] !== "number") {
+            const newEmployeeData = [...employeeData].sort((a, b) => {
+                if (typeof a[filter.nameFilter] !== "number") {
                     return b[filter.nameFilter].localeCompare(a[filter.nameFilter]);
-        } else {
+                } else {
                     return b[filter.nameFilter] - a[filter.nameFilter]
-            }
-        })
+                }
+            })
             setEmployeeData(newEmployeeData)
         } else {
             setEmployeeData(employeeDataNoFilter)
         }
         setFilterApplied(false)
     }
-
 
 
     // Fonction qui gère la recherche dans les données des employés.
@@ -156,6 +154,7 @@ function Employees() {
         }
     }
 
+
     // Fonction qui filtre les données des employés en fonction d'une valeur de recherche.
     const filterDataBySearch = (employees, valueToSearch) => {
         return Object.values(employees).some(valueEmployee => {
@@ -169,6 +168,7 @@ function Employees() {
             return false
         })
     }
+
 
     // Fonction qui met à jour l'affichage des entrées en fonction du nombre sélectionné par l'utilisateur.
     const numberEntriesToShow = (e) => {

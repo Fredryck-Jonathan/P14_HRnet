@@ -16,12 +16,6 @@ function modal() {
                 <button onClick={(e) => {toggleModalHome(e)}} className="button-modal"><ion-icon name="close-outline"></ion-icon></button>
             </div>
         </div>
-
-
     )
-
-
-
 }
-
 export default modal

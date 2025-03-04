@@ -12,6 +12,7 @@ function Home() {
 
     const dispatch = useDispatch();
 
+
     // Fonction qui déclenche les vérifications et active/désactive le bouton submit.
     const verifyElements = () => {
         const allInputs = document.querySelectorAll('input');
@@ -30,6 +31,7 @@ function Home() {
         }
     }
 
+
     // Fonction qui vérifie si une valeur correspond à une expression régulière
     const verifyElement = (element, regexToTest) => {
         const value = element.value;
@@ -39,6 +41,7 @@ function Home() {
             return false
         }
     }
+
 
     // Fonction qui vérifie si un élément possède un attribut data-valid égal à true
     const verifyDate = (element) => {
@@ -150,9 +153,7 @@ function Home() {
                     <button id="button-submit" type="submit" disabled>Save</button>
                 </form>
             </div>
-
             <ModalComponent></ModalComponent>
-
         </div>
     )
 }
