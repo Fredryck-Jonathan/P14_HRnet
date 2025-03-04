@@ -289,6 +289,47 @@ body {
   background-color: grey;
 }
 
+.modal-div {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.modal-div.active {
+  display: flex;
+}
+.modal-div .modal-div-content {
+  position: relative;
+  width: 50%;
+  height: 60%;
+  background-color: white;
+  border-radius: 50px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.modal-div .modal-div-content .message-modal {
+  font-size: 30px;
+}
+.modal-div .modal-div-content .button-modal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  border: none;
+  background-color: transparent;
+}
+
 .home {
   display: flex;
   flex-direction: column;

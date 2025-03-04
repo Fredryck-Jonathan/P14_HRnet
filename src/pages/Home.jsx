@@ -3,14 +3,16 @@ import Calender from "../components/calender";
 import usStates from "../data/usStates";
 import departmentData from "../data/department_data";
 
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { postEmployee } from "../actions/employee.action";
+
+import ModalComponent from "../components/modal";
 
 function Home() {
 
     const dispatch = useDispatch();
 
+    // Fonction qui déclenche les vérifications et active/désactive le bouton submit.
     const verifyElements = () => {
         const allInputs = document.querySelectorAll('input');
         const [firstName, lastName, dateOfBirth, startDate, street, city, zipCode] = allInputs;
@@ -19,7 +21,6 @@ function Home() {
         const regexName = /^[a-zA-Z]{3,}$/;
         const regexTextwithNumber = /^[a-zA-Z0-9À-ÖØ-öø-ÿ\s]{3,}$/;
         const regexNumber = /^\d{5}$/;
-
         if (verifyElement(firstName, regexName) && verifyElement(lastName, regexName) && verifyDate(dateOfBirth) && verifyDate(startDate) && verifyElement(street, regexTextwithNumber) && verifyElement(city, regexTextwithNumber) && verifyElement(selectStates, regexName) && verifyElement(zipCode, regexNumber) && verifyElement(selectDepartment, regexName)) {
             document.getElementById('button-submit').removeAttribute('disabled');
             return true
@@ -27,9 +28,9 @@ function Home() {
             document.getElementById('button-submit').setAttribute('disabled', "");
             return false
         }
-
     }
 
+    // Fonction qui vérifie si une valeur correspond à une expression régulière
     const verifyElement = (element, regexToTest) => {
         const value = element.value;
         if (regexToTest.test(value)) {
@@ -39,7 +40,7 @@ function Home() {
         }
     }
 
-
+    // Fonction qui vérifie si un élément possède un attribut data-valid égal à true
     const verifyDate = (element) => {
         const data_valid = element.getAttribute('data-valid');
         if (data_valid === "true") {
@@ -50,6 +51,7 @@ function Home() {
     }
 
 
+    // Fonction qui gère la soumission du formulaire d'ajout d'un employé.
     const submitEvent = (e) => {
         e.preventDefault()
         if (verifyElements()) {
@@ -70,14 +72,19 @@ function Home() {
                 state: selectStates.value,
                 zipCode: Number(zipCode.value)
             }
-
             try {
                 dispatch(postEmployee(objectEmployee))
-                alert("L'Employé(e) à bien été enregistrer");
+                const modalDiv = document.querySelector('.modal-div');
+                const message = modalDiv.querySelector('.message-modal');
+                message.textContent = "Nouvel employé créé avec succès";
+                modalDiv.classList.add('active');
                 e.currentTarget.reset()
             } catch (error) {
                 console.error(error);
-                alert("ERREUR: L'employé(e) n'a pas pu etre enregistrer");
+                const modalDiv = document.querySelector('.modal-div');
+                const message = modalDiv.querySelector('.message-modal');
+                message.textContent = "L'employée n'a pas pu être enregistré";
+                modalDiv.classList.add('active');
             }
         } else {
             document.getElementById('button-submit').setAttribute('disabled', "");
@@ -143,6 +150,9 @@ function Home() {
                     <button id="button-submit" type="submit" disabled>Save</button>
                 </form>
             </div>
+
+            <ModalComponent></ModalComponent>
+
         </div>
     )
 }
